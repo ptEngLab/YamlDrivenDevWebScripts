@@ -1,0 +1,10 @@
+# All times are defined in seconds
+vusers: 1              #The number of Vusers that will be run during the test
+pacing:                #The period of time to wait between iteration of each Vuser
+  type: delay          #The Pacing type, valid values: delay or interval
+  mode: fixed          #The Pacing mode, valid values: fixed or random
+  value: 5             #The amount of time to use with fixed mode (in seconds).
+rampUp: 0              #The number of seconds it will take to start all the Vusers
+                       #The starting of Vusers that will be distributed equally throughout this time frame
+duration: 10           #The number of seconds to run Vuser iterations after all the Vusers have started running
+tearDown: 0            #Not used

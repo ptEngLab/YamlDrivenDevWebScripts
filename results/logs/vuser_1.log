@@ -1,0 +1,25 @@
+[09:17:08.05] Info: Starting initialize.
+[09:17:08.05] Info: Transaction '01_authentication_api' started.	(.\RequestBuilder.js:111:21)
+[09:17:08.05] Info: WebRequest [Id: 1] 'https://dummyjson.com/auth/login' registered to send (sync).	(.\RequestBuilder.js:112:42)
+[09:17:08.43] Info: WebRequest [Id: 1] 'https://dummyjson.com/auth/login' completed. (1 request(s) sent, 2526 bytes downloaded)	(.\RequestBuilder.js:112:42)
+[09:17:08.43] Info: Transaction '01_authentication_api' ended with 'Passed' status (Duration: 377 ms, ThinkTime: 0 ms).	(.\RequestBuilder.js:117:21)
+[09:17:08.43] Info: Ending initialize.
+[09:17:08.44] Info: Starting iteration 1.
+[09:17:08.44] Info: Retrieved from token manager	(    at .\RequestBuilder.js:60:22)
+[09:17:08.44] Info: Transaction '02_user_data' started.	(.\RequestBuilder.js:111:21)
+[09:17:08.44] Info: WebRequest [Id: 2] 'https://dummyjson.com/auth/me' registered to send (sync).	(.\RequestBuilder.js:112:42)
+[09:17:08.56] Info: WebRequest [Id: 2] 'https://dummyjson.com/auth/me' completed. (1 request(s) sent, 2049 bytes downloaded)	(.\RequestBuilder.js:112:42)
+[09:17:08.57] Info: Transaction '02_user_data' ended with 'Passed' status (Duration: 126 ms, ThinkTime: 0 ms).	(.\RequestBuilder.js:117:21)
+[09:17:08.57] Info: Retrieved from token manager	(    at .\RequestBuilder.js:60:22)
+[09:17:08.57] Info: Transaction '03_post_user_data' started.	(.\RequestBuilder.js:111:21)
+[09:17:08.57] Info: WebRequest [Id: 3] 'https://dummyjson.com/carts/add' registered to send (sync).	(.\RequestBuilder.js:112:42)
+[09:17:08.69] Info: WebRequest [Id: 3] 'https://dummyjson.com/carts/add' completed. (1 request(s) sent, 1256 bytes downloaded)	(.\RequestBuilder.js:112:42)
+[09:17:08.69] Info: Transaction '03_post_user_data' ended with 'Passed' status (Duration: 122 ms, ThinkTime: 0 ms).	(.\RequestBuilder.js:117:21)
+[09:17:08.69] Info: Ending iteration 1.
+[09:17:08.70] Info: Starting finalize.
+[09:17:08.70] Info: Retrieved from token manager	(    at .\RequestBuilder.js:60:22)
+[09:17:08.70] Info: Transaction '04_logout_user' started.	(.\RequestBuilder.js:111:21)
+[09:17:08.70] Info: WebRequest [Id: 4] 'https://dummyjson.com/users/search?q=John' registered to send (sync).	(.\RequestBuilder.js:112:42)
+[09:17:08.91] Info: WebRequest [Id: 4] 'https://dummyjson.com/users/search?q=John' completed. (1 request(s) sent, 4849 bytes downloaded)	(.\RequestBuilder.js:112:42)
+[09:17:08.91] Info: Transaction '04_logout_user' ended with 'Passed' status (Duration: 212 ms, ThinkTime: 0 ms).	(.\RequestBuilder.js:117:21)
+[09:17:08.91] Info: Ending finalize.

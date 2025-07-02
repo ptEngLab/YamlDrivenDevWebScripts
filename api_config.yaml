@@ -1,0 +1,51 @@
+api_config:
+  login_api:
+    phase: "initialize"
+    name: "01_authentication_api"
+    is_auth_api: true
+    method: POST
+    url: "https://dummyjson.com/auth/login"
+    headers:
+      Content-Type: "application/json"
+    payload:
+      username: "emilys"
+      password: "emilyspass"
+      expiresInMins: 2
+    response_mapping:
+      extractors:
+        access_token: $.accessToken
+
+  get_user_data:
+    phase: "action"
+    name: "02_user_data"
+    url: "https://dummyjson.com/auth/me"
+    method: "GET"
+    headers:
+      Authorization: "Bearer ${access_token}"
+    depends_on: "01_authentication_api"
+
+  post_user_data:
+    phase: "action"
+    name: "03_post_user_data"
+    depends_on: "01_authentication_api"
+    url: "https://dummyjson.com/carts/add"
+    method: "POST"
+    headers:
+      Authorization: "Bearer ${access_token}"
+      Content-Type: "application/json"
+    payload:
+      userId: 1
+      products:
+        - id: 144
+          quantity: 4
+        - id: 98
+          quantity: 1
+
+  logout_api:
+    name: "04_logout_user"
+    phase: "finalize"
+    url: "https://dummyjson.com/users/search?q=John"
+    method: "GET"
+    headers:
+      Authorization: "Bearer ${access_token}"
+    depends_on: "01_authentication_api"

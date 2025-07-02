@@ -1,0 +1,336 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "[Performance Engineering for Developers] Record flow",
+      "type": "process",
+      "presentation": {
+        "panel": "new"
+      },
+      "command": "${env:DEVWEB_PATH}/ProxyRecorder",
+      "windows": {
+        "command": "${env:DEVWEB_PATH}\\ProxyRecorder.exe"
+      },
+      "args": [
+        "-ide=vscode",
+        "-launchBrowser=chrome",
+        "${cwd}/proxyrecorded.har"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "[Performance Engineering for Developers] Generate script",
+      "type": "process",
+      "presentation": {
+        "panel": "new"
+      },
+      "command": "${env:DEVWEB_PATH}/OfflineGenerator",
+      "windows": {
+        "command": "${env:DEVWEB_PATH}\\OfflineGenerator.exe"
+      },
+      "args": [
+        "-mode=har",
+        "-level=pages",
+        "-ide=vscode",
+        "${cwd}/proxyrecorded.har",
+        "${cwd}"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "[Performance Engineering for Developers] Generate Swagger API functions",
+      "type": "process",
+      "presentation": {
+        "panel": "new"
+      },
+      "command": "${env:DEVWEB_PATH}/OfflineGenerator",
+      "windows": {
+        "command": "${env:DEVWEB_PATH}\\OfflineGenerator.exe"
+      },
+      "args": [
+        "-mode=swagger",
+        "-level=pages",
+        "-ide=vscode",
+        "${input:swaggerJson}",
+        "${cwd}"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "[Performance Engineering for Developers] Generate GRPC API functions",
+      "type": "process",
+      "presentation": {
+        "panel": "new"
+      },
+      "command": "${env:DEVWEB_PATH}/OfflineGenerator",
+      "windows": {
+        "command": "${env:DEVWEB_PATH}\\OfflineGenerator.exe"
+      },
+      "args": [
+        "-mode=grpc",
+        "-ide=vscode",
+        "-proto=${input:protoFile}",
+        "${cwd}"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "[Performance Engineering for Developers] Generate script with Swagger API functions",
+      "type": "process",
+      "presentation": {
+        "panel": "new"
+      },
+      "command": "${env:DEVWEB_PATH}/OfflineGenerator",
+      "windows": {
+        "command": "${env:DEVWEB_PATH}\\OfflineGenerator.exe"
+      },
+      "args": [
+        "-mode=swagger",
+        "-level=pages",
+        "-ide=vscode",
+        "-har=${cwd}/proxyrecorded.har",
+        "${input:swaggerJson}",
+        "${cwd}"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "[Performance Engineering for Developers] Run Single Vuser",
+      "type": "process",
+      "presentation": {
+        "panel": "new"
+      },
+      "command": "${env:DEVWEB_PATH}/DevWeb",
+      "windows": {
+        "command": "${env:DEVWEB_PATH}\\DevWeb.exe"
+      },
+      "args": [
+        "-ide=vscode",
+        "${cwd}"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "[Performance Engineering for Developers] Run Single Vuser In Iterations",
+      "type": "process",
+      "presentation": {
+        "panel": "new"
+      },
+      "command": "${env:DEVWEB_PATH}/DevWeb",
+      "windows": {
+        "command": "${env:DEVWEB_PATH}\\DevWeb.exe"
+      },
+      "args": [
+        "-ide=vscode",
+        "-iterations=${input:iterations}",
+        "${cwd}"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "[Performance Engineering for Developers] Run Load",
+      "type": "process",
+      "presentation": {
+        "panel": "new"
+      },
+      "command": "${env:DEVWEB_PATH}/DevWeb",
+      "windows": {
+        "command": "${env:DEVWEB_PATH}\\DevWeb.exe"
+      },
+      "args": [
+        "-mode=load",
+        "-ide=vscode",
+        "${workspaceRoot}"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "[Performance Engineering for Developers] Debug Single Vuser",
+      "type": "process",
+      "command": "${env:DEVWEB_PATH}/DevWeb",
+      "windows": {
+        "command": "${env:DEVWEB_PATH}\\DevWeb.exe"
+      },
+      "isBackground": true,
+      "presentation": {
+        "panel": "new"
+      },
+      "args": [
+        "-inspect",
+        "-ide=vscode",
+        "${workspaceRoot}"
+      ],
+      "problemMatcher": [
+        {
+          "pattern": [
+            {
+              "regexp": ".",
+              "file": 1,
+              "location": 2,
+              "message": 3
+            }
+          ],
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": ".",
+            "endsPattern": "."
+          }
+        }
+      ]
+    },
+    {
+      "label": "[Performance Engineering for Developers] Run test on OpenText Performance Engineering Core",
+      "type": "process",
+      "presentation": {
+        "panel": "new"
+      },
+      "command": "${env:DEVWEB_PATH}/ScalUP",
+      "windows": {
+        "command": "${env:DEVWEB_PATH}\\ScalUP.exe"
+      },
+      "args": [
+        "cor",
+        "-report=COR_Report.pdf",
+        "run",
+        "${cwd}"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "[Performance Engineering for Developers] Get test run results from OpenText Performance Engineering Core",
+      "type": "process",
+      "presentation": {
+        "panel": "new"
+      },
+      "command": "${env:DEVWEB_PATH}/ScalUP",
+      "windows": {
+        "command": "${env:DEVWEB_PATH}\\ScalUP.exe"
+      },
+      "args": [
+        "cor",
+        "-report=LRC_Report.pdf",
+        "getResults",
+        "${input:runId}",
+        "${cwd}"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "[Performance Engineering for Developers] Get distribution list from OpenText Performance Engineering Core",
+      "type": "process",
+      "presentation": {
+        "panel": "new"
+      },
+      "command": "${env:DEVWEB_PATH}/ScalUP",
+      "windows": {
+        "command": "${env:DEVWEB_PATH}\\ScalUP.exe"
+      },
+      "args": [
+        "cor",
+        "info",
+        "locations",
+        "${cwd}"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "[Performance Engineering for Developers] Get load generators list from OpenText Performance Engineering Core",
+      "type": "process",
+      "presentation": {
+        "panel": "new"
+      },
+      "command": "${env:DEVWEB_PATH}/ScalUP",
+      "windows": {
+        "command": "${env:DEVWEB_PATH}\\ScalUP.exe"
+      },
+      "args": [
+        "cor",
+        "info",
+        "loadGenerators",
+        "${cwd}"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "[Performance Engineering for Developers] Run test on OpenText Performance Engineering for Enterprise",
+      "type": "process",
+      "presentation": {
+        "panel": "new"
+      },
+      "command": "${env:DEVWEB_PATH}/ScalUP",
+      "windows": {
+        "command": "${env:DEVWEB_PATH}\\ScalUP.exe"
+      },
+      "args": [
+        "ent",
+        "-report=${cwd}",
+        "run",
+        "${cwd}"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "[Performance Engineering for Developers] Get test run results from OpenText Performance Engineering for Enterprise",
+      "type": "process",
+      "presentation": {
+        "panel": "new"
+      },
+      "command": "${env:DEVWEB_PATH}/ScalUP",
+      "windows": {
+        "command": "${env:DEVWEB_PATH}\\ScalUP.exe"
+      },
+      "args": [
+        "ent",
+        "-report=${cwd}",
+        "getResults",
+        "${input:runId}",
+        "${cwd}"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "[Performance Engineering for Developers] Regenerate script",
+      "type": "process",
+      "presentation": {
+        "panel": "new"
+      },
+      "command": "${env:DEVWEB_PATH}/OfflineGenerator",
+      "windows": {
+        "command": "${env:DEVWEB_PATH}\\OfflineGenerator.exe"
+      },
+      "args": [
+        "-mode=har",
+        "-level=pages",
+        "-ide=vscode",
+        "${cwd}/codegen/codegen.har",
+        "${cwd}"
+      ],
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "swaggerJson",
+      "description": "Full path to swagger json file:",
+      "default": "swagger.json",
+      "type": "promptString"
+    },
+    {
+      "id": "protoFile",
+      "description": "Full path to GRPC proto file:",
+      "default": "hello.proto",
+      "type": "promptString"
+    },
+    {
+      "id": "runId",
+      "description": "Id of the test run:",
+      "type": "promptString"
+    },
+    {
+      "id": "iterations",
+      "description": "Number of iterations:",
+      "default": "1",
+      "type": "promptString"
+    }
+  ]
+}
