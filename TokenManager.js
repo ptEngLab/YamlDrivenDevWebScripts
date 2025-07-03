@@ -2,6 +2,8 @@ class TokenManager {
     constructor() {
         this.tokens = {};
         this.tokenDependencies = {};
+        this.managedTokens = new Set(); // Track which tokens we manage
+
         this.configParser = null; // Will be set during initialization
         load.log('TokenManager initialized', load.LogLevel.debug);
     }
@@ -11,9 +13,15 @@ class TokenManager {
         this.configParser = configParser;
     }
 
+    isManagedToken(tokenName) {
+        return this.managedTokens.has(tokenName);
+    }
+
+
     setToken(tokenName, tokenValue, expiresIn) {
         const expirationTime = new Date();
         expirationTime.setSeconds(expirationTime.getSeconds() + expiresIn - 60); // 60-second buffer
+        this.managedTokens.add(tokenName); // Add to managed tokens
 
         this.tokens[tokenName] = {
             value: tokenValue,

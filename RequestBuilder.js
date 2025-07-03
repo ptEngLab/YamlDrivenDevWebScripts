@@ -53,24 +53,36 @@ class RequestBuilder {
         if (typeof text !== 'string') return text;
 
         return text.replace(/\$\{([^}]+)\}/g, (match, tokenName) => {
-
-            // First try TokenManager's extracted values
-            const tokenFromManager = tokenManager.getToken(tokenName);
-            if (tokenFromManager) {
-                load.log("Retrieved from token manager");
-                return tokenFromManager;
+            // Only try TokenManager for tokens it actually manages
+            if (tokenManager.isManagedToken(tokenName)) {
+                try {
+                    const tokenFromManager = tokenManager.getToken(tokenName);
+                    if (tokenFromManager) {
+                        load.log(`Retrieved managed token ${tokenName} from TokenManager`, load.LogLevel.trace);
+                        return tokenFromManager;
+                    }
+                } catch (error) {
+                    load.log(`Failed to get managed token ${tokenName}: ${error.message}`, load.LogLevel.warning);
+                }
             }
 
-
-            // then try LoadRunner's extracted values
-            if (load.extractors && load.extractors[tokenName]) {
+            // For all tokens (managed or not), try extractors
+            if (load.extractors?.[tokenName]) {
+                load.log(`Retrieved token ${tokenName} from extractors`, load.LogLevel.trace);
                 return load.extractors[tokenName];
             }
-            // Fallback to environment or other tokens if needed
+
+            // Fallback to environment variables
+            if (process.env[tokenName]) {
+                load.log(`Retrieved ${tokenName} from environment variables`, load.LogLevel.trace);
+                return process.env[tokenName];
+            }
+
+            // If nothing found, return the original match (don't fail)
+            load.log(`Token ${tokenName} not found in any source`, load.LogLevel.debug);
             return match;
         });
     }
-
     _processHeaders(headers) {
         const processed = {};
         for (const [key, value] of Object.entries(headers)) {
@@ -103,18 +115,16 @@ class RequestBuilder {
  * @param {Array} apiList - List of API configurations to execute
  */
 
-    executeApiRequests(apiList) {
+    executeApiRequestss(apiList) {
         for (const apiConfig of apiList) {
             const txn = new load.Transaction(apiConfig.name);
             try {
                 const request = this.build(apiConfig);
                 txn.start();
                 const response = request.sendSync();
-
+                txn.stop();
             } catch (error) {
                 load.log(`API request failed: ${apiConfig.name} - ${error.message}`, load.LogLevel.error);
-            } finally {
-                txn.stop();
             }
 
             this._handleAuthResponse(apiConfig);
@@ -122,6 +132,34 @@ class RequestBuilder {
         }
     }
 
+    executeApiRequests(apiList) {
+        for (const apiConfig of apiList) {
+            const txn = new load.Transaction(apiConfig.name);
+            let transactionStatus = load.TransactionStatus.Passed; // Default to passed
+
+            try {
+                const request = this.build(apiConfig);
+
+                // Start transaction timing
+                txn.start();
+                load.log(`Transaction '${apiConfig.name}' started`, load.LogLevel.debug);
+
+                const response = request.sendSync();
+
+                // Handle successful auth responses
+                this._handleAuthResponse(apiConfig);
+
+            } catch (error) {
+                // Log error and ensure status is failed
+                transactionStatus = load.TransactionStatus.Failed;
+                load.log(`API request failed: ${apiConfig.name} - ${error.message}`, load.LogLevel.error);
+
+            } finally {
+                // Always stop the transaction with proper status
+                txn.stop(transactionStatus);
+            }
+        }
+    }
     _handleAuthResponse(apiConfig) {
         if (!this._configParser.isAuthApi(apiConfig)) return;
 
