@@ -1,4 +1,4 @@
-- name: 01_authentication_api
-- name: 02_user_data
 - name: 03_post_user_data
 - name: 04_logout_user
+- name: 01_authentication_api
+- name: 02_user_data

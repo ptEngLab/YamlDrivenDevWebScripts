@@ -21,7 +21,7 @@ api_config:
     url: "https://dummyjson.com/auth/me"
     method: "GET"
     headers:
-      Authorization: "Bearer ${access_token}"
+      Authorization: "Bearer ${access_tokens}"
     depends_on: "01_authentication_api"
 
   post_user_data:
